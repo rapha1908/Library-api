@@ -1,7 +1,20 @@
 import express from "express"
+import connectDatabase from "./config/dbConection.js";
+import book from "./models/Books.js";
 
 const app = express();
 app.use(express.json());
+
+const connection = await connectDatabase()
+
+connection.on("error", (erro)=>{
+    console.error("erro de coneçao", erro)
+})
+
+connection.once("open", ()=>{
+    console.log("foi")
+})
+
 
 const livros = [
     {
@@ -24,8 +37,9 @@ app.get("/", (req,res) =>{
     res.status(200).send("Curso De Node");
 })
 
-app.get("/livros", (req,res) =>{
-    res.status(200).json(livros)
+app.get("/livros", async (req,res) =>{
+    const listBooks = await book.find()
+    res.status(200).json(listBooks)
 })
 
 app.get("/livros/:id", (req,res) =>{
@@ -52,3 +66,4 @@ app.post("/livros", (req,res) =>{
 });
 
 export default app;
+
