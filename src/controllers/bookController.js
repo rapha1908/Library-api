@@ -63,6 +63,16 @@ class BookController{
             res.status(500).json({message: `Error ${error.message} - Problema em Deletar o livro`})
         }
     }
+    static async listBooksByEdited(req,res){
+        const edited = req.query.edited;
+        try {
+            const booksByEdited = await book.find({ edited: edited });
+            res.status(200).json(booksByEdited)
+        } catch (error) {
+            res.status(500).json({message: `Error ${error.message} - Problema em localizar editora`})
+
+        }
+    }
 
 
 };
